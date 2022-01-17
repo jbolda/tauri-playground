@@ -1,0 +1,25 @@
+[package]
+authors = ["you"]
+build = "src/build.rs"
+default-run = "app"
+description = "A Tauri App"
+edition = "2018"
+license = ""
+name = "app"
+repository = ""
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = {version = "1.0.0-beta.4"}
+
+[dependencies]
+serde = {version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sysinfo = "0.22.2"
+tauri = {version = "1.0.0-beta.8", features = ["api-all", "system-tray"] }
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+default = ["custom-protocol"]
