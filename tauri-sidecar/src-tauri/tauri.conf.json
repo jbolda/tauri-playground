@@ -14,7 +14,10 @@
     "allowlist": {
       "shell": {
         "sidecar": true,
-        "scope": [{ "name": "../bin/graphgen", "sidecar": true }]
+        "scope": [
+          { "name": "../bin/graphgen", "sidecar": true },
+          { "name": "../bin/deno-server", "sidecar": true }
+        ]
       }
     },
     "bundle": {
@@ -24,7 +27,7 @@
       "deb": {
         "depends": []
       },
-      "externalBin": ["../bin/graphgen"],
+      "externalBin": ["../bin/graphgen", "../bin/deno-server"],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -32,7 +35,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.tauri-deno-sidecar.dev",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -58,10 +61,11 @@
     },
     "windows": [
       {
-        "fullscreen": false,
-        "height": 600,
-        "resizable": true,
         "title": "tauri-sidecar",
+        "fullscreen": false,
+        "resizable": true,
+        "center": true,
+        "height": 600,
         "width": 800
       }
     ]

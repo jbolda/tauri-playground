@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import preactLogo from "./assets/preact.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import { Command } from "@tauri-apps/api/shell";
@@ -13,14 +13,22 @@ export function App() {
     stdout: "",
     stderr: "",
   });
-  const [graphgenStream, setCommandStream] = useState("");
+  const [denoStream, setCommandStream] = useState("");
   const graphgen = Command.sidecar("../bin/graphgen");
 
-  listen("message", (event) => {
-    // event.event is the event name (useful if you want to use a single callback fn for multiple event types)
-    // event.payload is the payload object
-    console.log(event);
-  });
+  useEffect(() => {
+    console.log("setting up listen");
+    const unlisten = listen("deno-server://logs", (event) => {
+      // event.event is the event name (useful if you want to use a single callback fn for multiple event types)
+      // event.payload is the payload object
+      console.log(event);
+      setCommandStream((text) => `${!text ? "" : text}<p>${event.payload}</p>`);
+    });
+    return async () => {
+      console.log("unlistening");
+      await unlisten();
+    };
+  }, []);
 
   const greet = async () => {
     setGreetMsg(await invoke("greet", { name }));
@@ -30,8 +38,8 @@ export function App() {
     setCommandOutput(await graphgen.execute());
   };
 
-  const startGraphgen = async () => {
-    const output = await invoke("start_graphgen");
+  const startDeno = async () => {
+    await invoke("start_deno");
     setCommandStream();
   };
 
@@ -83,11 +91,13 @@ export function App() {
 
       <div class="row">
         <div>
-          <button type="button" onClick={() => startGraphgen()}>
-            Start Graphgen Server
+          <button type="button" onClick={() => startDeno()}>
+            Start Deno Server
           </button>
         </div>
       </div>
+      <p>stdout stream:</p>
+      <div dangerouslySetInnerHTML={{ __html: denoStream }} />
     </div>
   );
 }
