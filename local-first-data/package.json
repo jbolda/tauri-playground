@@ -1,0 +1,23 @@
+{
+  "name": "local-first-data",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^1.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tinybase": "^4.3.11"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.5.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "vite": "^4.4.4"
+  }
+}
