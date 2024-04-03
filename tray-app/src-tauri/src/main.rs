@@ -1,80 +1,63 @@
-#![cfg_attr(
-  all(not(debug_assertions), target_os = "windows"),
-  windows_subsystem = "windows"
-)]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::path::PathBuf;
 use tauri::menu::{MenuBuilder, MenuItemBuilder};
 use tauri::tray::{ClickType, TrayIconBuilder};
-use tauri::Icon;
 use tauri::Manager;
 
-use sysinfo::{System, SystemExt};
+use sysinfo::System;
 
 fn main() {
-  // let quit = MenuItem::new("quit".to_string(), "Quit");
-  // let hide = MenuItem::new("hide".to_string(), "Hide");
-  // let show = MenuItem::new("show".to_string(), "Show");
-  // let tray_menu = SystemTrayMenu::new()
-  //   .add_item(show)
-  //   .add_item(hide)
-  //   .add_native_item(SystemTrayMenuItem::Separator)
-  //   .add_item(quit);
-
-  // let system_tray = SystemTray::new().with_menu(tray_menu);
-
   tauri::Builder::default()
     .setup(|app| {
-      let quit = MenuItemBuilder::new("Quit").id("quit").build(app);
-      let hide = MenuItemBuilder::new("Hide").id("hide").build(app);
-      let show = MenuItemBuilder::new("Show").id("show").build(app);
+      let quit = MenuItemBuilder::new("Quit").id("quit").build(app).unwrap();
+      let hide = MenuItemBuilder::new("Hide").id("hide").build(app).unwrap();
+      let show = MenuItemBuilder::new("Show").id("show").build(app).unwrap();
       // we could opt handle an error case better than calling unwrap
       let menu = MenuBuilder::new(app)
         .items(&[&quit, &hide, &show])
         .build()
         .unwrap();
 
-      // best to use 32 pixel for tray icon
-      let tray_icon = Icon::File(PathBuf::from("./icons/32x32.png"));
-      let tray = TrayIconBuilder::new()
+      let _ = TrayIconBuilder::new()
         .icon(app.default_window_icon().unwrap().clone())
         .menu(&menu)
         .on_menu_event(|app, event| match event.id().as_ref() {
-          "quit" => {
-            std::process::exit(0);
-          }
+          "quit" => app.exit(0),
           "hide" => {
-            let window = app.get_window("main").unwrap();
+            dbg!("menu item hide clicked");
+            let window = app.get_webview_window("main").unwrap();
             window.hide().unwrap();
           }
           "show" => {
-            let window = app.get_window("main").unwrap();
+            dbg!("menu item show clicked");
+            let window = app.get_webview_window("main").unwrap();
             window.show().unwrap();
           }
           _ => {}
         })
-        .on_tray_event(|tray_icon, event| match event.click_type {
+        .on_tray_icon_event(|tray_icon, event| match event.click_type {
           ClickType::Left => {
             dbg!("system tray received a left click");
-            let window = tray_icon.app_handle().get_window("main").unwrap();
-            window.show().unwrap();
+
+            let window = tray_icon.app_handle().get_webview_window("main").unwrap();
+            let _ = window.show().unwrap();
             let logical_size = tauri::LogicalSize::<f64> {
               width: 300.00,
               height: 400.00,
             };
             let logical_s = tauri::Size::Logical(logical_size);
-            window.set_size(logical_s);
+            let _ = window.set_size(logical_s);
             let logical_position = tauri::LogicalPosition::<f64> {
               x: event.x - logical_size.width,
               y: event.y - logical_size.height - 70.,
             };
             let logical_pos: tauri::Position = tauri::Position::Logical(logical_position);
-            window.set_position(logical_pos);
-            window.set_focus();
+            let _ = window.set_position(logical_pos);
+            let _ = window.set_focus();
           }
           ClickType::Right => {
             dbg!("system tray received a right click");
-            let window = tray_icon.app_handle().get_window("main").unwrap();
+            let window = tray_icon.app_handle().get_webview_window("main").unwrap();
             window.hide().unwrap();
           }
           ClickType::Double => {

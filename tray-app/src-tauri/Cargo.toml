@@ -1,9 +1,7 @@
 [package]
 authors = ["you"]
-build = "src/build.rs"
-default-run = "app"
 description = "A Tauri App"
-edition = "2018"
+edition = "2021"
 license = ""
 name = "app"
 repository = ""
@@ -12,17 +10,14 @@ version = "0.1.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = {version = "2.0.0-alpha", path="../../../../tauri-apps/tauri/core/tauri-build", features = [] }
+tauri-build = { version = "2.0.0-beta", features = [] }
 
 [dependencies]
-serde = {version = "1.0", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-sysinfo = "0.29.10"
-tauri = {version = "2.0.0-alpha", path="../../../../tauri-apps/tauri/core/tauri", features = ["tray-icon", "icon-png"] }
+sysinfo = "0.30.8"
+tauri = { version = "2.0.0-beta", features = ["tray-icon"] }
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]
 default = ["custom-protocol"]
-
-# [lib]
-# crate-type = ["staticlib", "cdylib", "rlib"]
