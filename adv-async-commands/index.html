@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tauri App</title>
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+
+  <body>
+    <main class="container">
+      <h1>Advanced Async Commands</h1>
+
+      <select name="command-selector" id="command-selector">
+        <option value="window_label">Arg With Window Label</option>
+        <option value="download_chunked_json">
+          Download Chunked JSON File
+        </option>
+      </select>
+      <input id="arg-input" placeholder="Enter a arg value" />
+      <button id="fire-command" type="button">Fire Command</button>
+    </main>
+  </body>
+</html>
