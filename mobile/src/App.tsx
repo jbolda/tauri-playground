@@ -2,7 +2,7 @@ import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import { sendNotification } from "@tauri-apps/plugin-notification";
-import { scan, Format } from "@tauri-apps/plugin-barcode-scanner";
+import { scan, cancel, Format } from "@tauri-apps/plugin-barcode-scanner";
 import {
   vibrate,
   impactFeedback,
@@ -26,7 +26,6 @@ function App() {
     <main className="container">
       <h1>Welcome to Tauri + React</h1>
       <h2>Trying out the hot reload on Android Studio</h2>
-
       <form
         className="row"
         onSubmit={(e) => {
@@ -42,7 +41,6 @@ function App() {
         <button type="submit">Greet</button>
       </form>
       <p>{greetMsg}</p>
-
       <div className="row">
         <button
           onClick={
@@ -56,6 +54,18 @@ function App() {
           }
         >
           Scan
+        </button>
+      </div>
+      <div className="row">
+        <button
+          onClick={
+            // `windowed: true` actually sets the webview to transparent
+            // instead of opening a separate view for the camera
+            // make sure your user interface is ready to show what is underneath with a transparent element
+            () => cancel().catch((error) => console.log(error))
+          }
+        >
+          Cancel Scan
         </button>
       </div>
       <div className="row">

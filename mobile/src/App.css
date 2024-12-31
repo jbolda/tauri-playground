@@ -12,7 +12,8 @@
   font-weight: 400;
 
   color: #0f0f0f;
-  background-color: #f6f6f6;
+  /* no colors means we can use the transparent background */
+  /* background-color: #35645d; */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
